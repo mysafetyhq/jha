@@ -22,6 +22,7 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         select {
             width: 100%;
@@ -30,6 +31,7 @@
             border-radius: 4px;
             background-color: #fff;
             font-family: 'Roboto Mono', monospace;
+            margin-bottom: 10px;
         }
         #taskList {
             margin-top: 20px;
@@ -74,6 +76,9 @@
             <option value="plumbing">Plumbing</option>
             <option value="carpentry">Carpentry</option>
             <option value="hvac">HVAC Installation</option>
+        </select>
+        <select id="hazardSelect" disabled>
+            <option value="">Select a hazard</option>
         </select>
     </div>
     <div id="taskList"></div>
@@ -215,30 +220,50 @@
         };
 
         const taskSelect = document.getElementById('taskSelect');
+        const hazardSelect = document.getElementById('hazardSelect');
         const taskList = document.getElementById('taskList');
 
-        taskSelect.addEventListener('change', updateTaskList);
+        taskSelect.addEventListener('change', updateHazardList);
+        hazardSelect.addEventListener('change', addTaskItem);
 
-        function updateTaskList() {
+        function updateHazardList() {
             const selectedTask = taskSelect.value;
-            taskList.innerHTML = '';
+            hazardSelect.innerHTML = '<option value="">Select a hazard</option>';
+            hazardSelect.disabled = !selectedTask;
 
             if (selectedTask && taskData[selectedTask]) {
-                taskData[selectedTask].forEach(item => {
-                    const taskItem = document.createElement('div');
-                    taskItem.classList.add('task-item');
-                    taskItem.innerHTML = `
-                        <strong>Hazard:</strong> ${item.hazard}<br>
-                        <strong>Control:</strong> ${item.control}
-                        <button class="delete-btn">X</button>
-                    `;
-                    taskList.appendChild(taskItem);
-
-                    const deleteBtn = taskItem.querySelector('.delete-btn');
-                    deleteBtn.addEventListener('click', () => {
-                        taskList.removeChild(taskItem);
-                    });
+                taskData[selectedTask].forEach((item, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = item.hazard;
+                    hazardSelect.appendChild(option);
                 });
+            }
+        }
+
+        function addTaskItem() {
+            const selectedTask = taskSelect.value;
+            const selectedHazardIndex = hazardSelect.value;
+
+            if (selectedTask && selectedHazardIndex !== "") {
+                const hazardData = taskData[selectedTask][selectedHazardIndex];
+                const taskItem = document.createElement('div');
+                taskItem.classList.add('task-item');
+                taskItem.innerHTML = `
+                    <strong>Task:</strong> ${taskSelect.options[taskSelect.selectedIndex].text}<br>
+                    <strong>Hazard:</strong> ${hazardData.hazard}<br>
+                    <strong>Control:</strong> ${hazardData.control}
+                    <button class="delete-btn">X</button>
+                `;
+                taskList.appendChild(taskItem);
+
+                const deleteBtn = taskItem.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', () => {
+                    taskList.removeChild(taskItem);
+                });
+
+                // Reset hazard selection
+                hazardSelect.value = "";
             }
         }
     </script>
