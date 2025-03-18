@@ -274,5 +274,89 @@
 </body>
 </html>
 
+    <div class="form-container">
+        <h2>Add Custom Task, Hazard, and Control</h2>
+        <input type="text" id="customTask" placeholder="Enter Task" />
+        <input type="text" id="customHazard" placeholder="Enter Hazard" />
+        <input type="text" id="customControl" placeholder="Enter Control" />
+        <button id="addCustomBtn">Add Custom Item</button>
+    </div>
+
+    <button id="generateTextReport">Generate Text Report</button>
+    <button id="generatePDFReport">Generate PDF Report</button>
+
+    <script>
+        const addCustomBtn = document.getElementById('addCustomBtn');
+        const customTaskInput = document.getElementById('customTask');
+        const customHazardInput = document.getElementById('customHazard');
+        const customControlInput = document.getElementById('customControl');
+
+        addCustomBtn.addEventListener('click', () => {
+            const customTask = customTaskInput.value.trim();
+            const customHazard = customHazardInput.value.trim();
+            const customControl = customControlInput.value.trim();
+
+            if (customTask && customHazard && customControl) {
+                const taskItem = document.createElement('div');
+                taskItem.classList.add('task-item');
+                taskItem.innerHTML = `
+                    <strong>Task:</strong> ${customTask}<br>
+                    <strong>Hazard:</strong> ${customHazard}<br>
+                    <strong>Control:</strong> ${customControl}
+                    <button class="delete-btn">X</button>
+                `;
+                taskList.appendChild(taskItem);
+
+                const deleteBtn = taskItem.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', () => {
+                    taskList.removeChild(taskItem);
+                });
+
+                // Clear input fields
+                customTaskInput.value = '';
+                customHazardInput.value = '';
+                customControlInput.value = '';
+            } else {
+                alert("Please fill in all fields.");
+            }
+        });
+
+        document.getElementById('generateTextReport').addEventListener('click', () => {
+            let reportContent = "Task, Hazard, Control\n";
+            const items = taskList.children;
+
+            for (let item of items) {
+                const task = item.querySelector('strong').nextSibling.textContent;
+                const hazard = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent;
+                const control = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent;
+                reportContent += `${task}, ${hazard}, ${control}\n`;
+            }
+
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        });
+
+        document.getElementById('generatePDFReport').addEventListener('click', () => {
+            let pdfContent = "<h1>Task Hazard Analysis Report</h1><table><tr><th>Task</th><th>Hazard</th><th>Control</th></tr>";
+            const items = taskList.children;
+
+            for (let item of items) {
+                const task = item.querySelector('strong').nextSibling.textContent;
+                const hazard = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent;
+                const control = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent;
+                pdfContent += `<tr><td>${task}</td><td>${hazard}</td><td>${control}</td></tr>`;
+            }
+            pdfContent += "</table>";
+
+            const pdfWindow = window.open('', '_blank');
+            pdfWindow.document.write(pdfContent);
+            pdfWindow.document.close();
+            pdfWindow.focus();
+            pdfWindow.print();
+        });
+    </script>
+
+
                
 
