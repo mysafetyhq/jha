@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction JHA Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .column {
+            flex: 1;
+            padding: 10px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            font-family: 'Roboto Mono', monospace;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #taskList {
+            margin-top: 20px;
+        }
+        .task-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Construction JHA Form</h1>
+    <div class="form-container">
+        <div class="row">
+            <div class="column">
+                <select id="taskSelect">
+                    <option value="">Select a task</option>
+                    <option value="excavation">Excavation</option>
+                    <option value="scaffolding">Scaffolding</option>
+                    <option value="electrical">Electrical Work</option>
+                    <option value="roofing">Roofing</option>
+                    <option value="concrete">Concrete Pouring</option>
+                    <option value="welding">Welding</option>
+                    <option value="painting">Painting</option>
+                    <option value="demolition">Demolition</option>
+                    <option value="crane">Crane Operation</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="carpentry">Carpentry</option>
+                    <option value="hvac">HVAC Installation</option>
+                </select>
+            </div>
+            <div class="column">
+                <select id="hazardSelect" disabled>
+                    <option value="">Hazard</option>
+                </select>
+            </div>
+            <div class="column">
+                <select id="controlSelect" disabled>
+                    <option value="">Control</option>
+                </select>
+            </div>
+        </div>
+        <button id="addTask">ADD TASK</button>
+    </div>
+    <div id="taskList"></div>
+
+    <script>
+        const taskData = {
+            excavation: {
+                hazards: ["Cave-ins", "Utility strikes", "Falls"],
+                controls: ["Shoring", "Utility locating", "Proper sloping"]
+            },
+            scaffolding: {
+                hazards: ["Falls", "Collapse", "Falling objects"],
+                controls: ["Guardrails", "Proper assembly", "Toe boards"]
+            },
+            electrical: {
+                hazards: ["Electrocution", "Burns", "Fire"],
+                controls: ["Lockout/Tagout", "Insulated tools", "GFCI"]
+            },
+            roofing: {
+                hazards: ["Falls", "Heat stress", "Falling objects"],
+                controls: ["Fall protection", "Hydration", "Debris netting"]
+            },
+            concrete: {
+                hazards: ["Chemical burns", "Silica dust", "Musculoskeletal injuries"],
+                controls: ["PPE", "Dust control", "Proper lifting techniques"]
+            },
+            welding: {
+                hazards: ["Burns", "Eye damage", "Fumes"],
+                controls: ["Welding PPE", "Ventilation", "Fire watch"]
+            },
+            painting: {
+                hazards: ["Chemical exposure", "Falls", "Respiratory issues"],
+                controls: ["Proper PPE", "Fall protection", "Ventilation"]
+            },
+            demolition: {
+                hazards: ["Collapse", "Falling objects", "Dust exposure"],
+                controls: ["Engineering survey", "Debris chutes", "Dust suppression"]
+            },
+            crane: {
+                hazards: ["Tip-over", "Struck-by", "Electrocution"],
+                controls: ["Load charts", "Signaling", "Power line safety"]
+            },
+            plumbing: {
+                hazards: ["Cuts", "Burns", "Confined spaces"],
+                controls: ["Cut-resistant gloves", "PPE", "Confined space procedures"]
+            },
+            carpentry: {
+                hazards: ["Cuts", "Falls", "Struck-by"],
+                controls: ["Tool guards", "Fall protection", "Hard hats"]
+            },
+            hvac: {
+                hazards: ["Falls", "Electrical", "Refrigerant exposure"],
+                controls: ["Fall protection", "Lockout/Tagout", "Proper ventilation"]
+            }
+        };
+
+        const taskSelect = document.getElementById('taskSelect');
+        const hazardSelect = document.getElementById('hazardSelect');
+        const controlSelect = document.getElementById('controlSelect');
+        const addTaskButton = document.getElementById('addTask');
+        const taskList = document.getElementById('taskList');
+
+        taskSelect.addEventListener('change', updateHazardsAndControls);
+        addTaskButton.addEventListener('click', addTaskToList);
+
+        function updateHazardsAndControls() {
+            const selectedTask = taskSelect.value;
+            hazardSelect.innerHTML = '<option value="">Hazard</option>';
+            controlSelect.innerHTML = '<option value="">Control</option>';
+
+            if (selectedTask && taskData[selectedTask]) {
+                taskData[selectedTask].hazards.forEach(hazard => {
+                    const option = document.createElement('option');
+                    option.value = hazard;
+                    option.textContent = hazard;
+                    hazardSelect.appendChild(option);
+                });
+
+                taskData[selectedTask].controls.forEach(control => {
+                    const option = document.createElement('option');
+                    option.value = control;
+                    option.textContent = control;
+                    controlSelect.appendChild(option);
+                });
+
+                hazardSelect.disabled = false;
+                controlSelect.disabled = false;
+            } else {
+                hazardSelect.disabled = true;
+                controlSelect.disabled = true;
+            }
+        }
+
+        function addTaskToList() {
+            const task = taskSelect.options[taskSelect.selectedIndex].text;
+            const hazard = hazardSelect.value;
+            const control = controlSelect.value;
+
+            if (task && hazard && control) {
+                const taskItem = document.createElement('div');
+                taskItem.classList.add('task-item');
+                taskItem.innerHTML = `
+                    <strong>Task:</strong> ${task}<br>
+                    <strong>Hazard:</strong> ${hazard}<br>
+                    <strong>Control:</strong> ${control}
+                `;
+                taskList.appendChild(taskItem);
+
+                // Reset selections
+                taskSelect.value = '';
+                hazardSelect.innerHTML = '<option value="">Hazard</option>';
+                controlSelect.innerHTML = '<option value="">Control</option>';
+                hazardSelect.disabled = true;
+                controlSelect.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
