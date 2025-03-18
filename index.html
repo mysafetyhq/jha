@@ -23,31 +23,13 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .row {
-            display: flex;
-            margin-bottom: 10px;
-        }
-        .column {
-            flex: 1;
-            padding: 10px;
-        }
-        select, button {
+        select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             background-color: #fff;
             font-family: 'Roboto Mono', monospace;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
         }
         #taskList {
             margin-top: 20px;
@@ -57,155 +39,206 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 4px;
+            position: relative;
+        }
+        .delete-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <h1>Construction JHA Form</h1>
     <div class="form-container">
-        <div class="row">
-            <div class="column">
-                <select id="taskSelect">
-                    <option value="">Select a task</option>
-                    <option value="excavation">Excavation</option>
-                    <option value="scaffolding">Scaffolding</option>
-                    <option value="electrical">Electrical Work</option>
-                    <option value="roofing">Roofing</option>
-                    <option value="concrete">Concrete Pouring</option>
-                    <option value="welding">Welding</option>
-                    <option value="painting">Painting</option>
-                    <option value="demolition">Demolition</option>
-                    <option value="crane">Crane Operation</option>
-                    <option value="plumbing">Plumbing</option>
-                    <option value="carpentry">Carpentry</option>
-                    <option value="hvac">HVAC Installation</option>
-                </select>
-            </div>
-            <div class="column">
-                <select id="hazardSelect" disabled>
-                    <option value="">Hazard</option>
-                </select>
-            </div>
-            <div class="column">
-                <select id="controlSelect" disabled>
-                    <option value="">Control</option>
-                </select>
-            </div>
-        </div>
-        <button id="addTask">ADD TASK</button>
+        <select id="taskSelect">
+            <option value="">Select a task</option>
+            <option value="excavation">Excavation</option>
+            <option value="scaffolding">Scaffolding</option>
+            <option value="electrical">Electrical Work</option>
+            <option value="roofing">Roofing</option>
+            <option value="concrete">Concrete Pouring</option>
+            <option value="welding">Welding</option>
+            <option value="painting">Painting</option>
+            <option value="demolition">Demolition</option>
+            <option value="crane">Crane Operation</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="carpentry">Carpentry</option>
+            <option value="hvac">HVAC Installation</option>
+        </select>
     </div>
     <div id="taskList"></div>
 
     <script>
         const taskData = {
-            excavation: {
-                hazards: ["Cave-ins", "Utility strikes", "Falls"],
-                controls: ["Shoring", "Utility locating", "Proper sloping"]
-            },
-            scaffolding: {
-                hazards: ["Falls", "Collapse", "Falling objects"],
-                controls: ["Guardrails", "Proper assembly", "Toe boards"]
-            },
-            electrical: {
-                hazards: ["Electrocution", "Burns", "Fire"],
-                controls: ["Lockout/Tagout", "Insulated tools", "GFCI"]
-            },
-            roofing: {
-                hazards: ["Falls", "Heat stress", "Falling objects"],
-                controls: ["Fall protection", "Hydration", "Debris netting"]
-            },
-            concrete: {
-                hazards: ["Chemical burns", "Silica dust", "Musculoskeletal injuries"],
-                controls: ["PPE", "Dust control", "Proper lifting techniques"]
-            },
-            welding: {
-                hazards: ["Burns", "Eye damage", "Fumes"],
-                controls: ["Welding PPE", "Ventilation", "Fire watch"]
-            },
-            painting: {
-                hazards: ["Chemical exposure", "Falls", "Respiratory issues"],
-                controls: ["Proper PPE", "Fall protection", "Ventilation"]
-            },
-            demolition: {
-                hazards: ["Collapse", "Falling objects", "Dust exposure"],
-                controls: ["Engineering survey", "Debris chutes", "Dust suppression"]
-            },
-            crane: {
-                hazards: ["Tip-over", "Struck-by", "Electrocution"],
-                controls: ["Load charts", "Signaling", "Power line safety"]
-            },
-            plumbing: {
-                hazards: ["Cuts", "Burns", "Confined spaces"],
-                controls: ["Cut-resistant gloves", "PPE", "Confined space procedures"]
-            },
-            carpentry: {
-                hazards: ["Cuts", "Falls", "Struck-by"],
-                controls: ["Tool guards", "Fall protection", "Hard hats"]
-            },
-            hvac: {
-                hazards: ["Falls", "Electrical", "Refrigerant exposure"],
-                controls: ["Fall protection", "Lockout/Tagout", "Proper ventilation"]
-            }
+            excavation: [
+                { hazard: "Cave-ins or trench collapses", control: "Proper protective systems (sloping/benching, shoring, or shielding)" },
+                { hazard: "Falling materials or objects", control: "Keep excavated material at least 2 feet from trench edge, use barriers" },
+                { hazard: "Hazardous atmospheres", control: "Air monitoring, ventilation, and respiratory protection" },
+                { hazard: "Striking underground utilities", control: "Call 811, use ground-penetrating radar, consult utility providers" },
+                { hazard: "Water accumulation and flooding", control: "Dewatering systems, proper pumping equipment" },
+                { hazard: "Falls into trenches", control: "Provide safe entry/exit points, use fall protection systems" },
+                { hazard: "Incidents involving mobile equipment", control: "Keep equipment away from trench edges, use spotters" },
+                { hazard: "Unstable adjacent structures", control: "Use adequate support systems, bracing, or underpinning" },
+                { hazard: "Electrocution from damaged power lines", control: "Identify and mark underground utilities, avoid mechanical equipment near lines" }
+            ],
+            scaffolding: [
+                { hazard: "Falls from height", control: "Proper guardrails, personal fall arrest systems" },
+                { hazard: "Scaffold collapse", control: "Proper assembly, inspection, and maintenance" },
+                { hazard: "Falling objects", control: "Toe boards, debris nets, hard hats" },
+                { hazard: "Electrocution", control: "Maintain safe distance from power lines" },
+                { hazard: "Overloading", control: "Adhere to load capacity, distribute weight evenly" },
+                { hazard: "Instability", control: "Use proper base plates, mudsills, and tie-ins" },
+                { hazard: "Access hazards", control: "Provide safe access with ladders or stairs" },
+                { hazard: "Improper planking", control: "Use scaffold-grade planks, secure properly" },
+                { hazard: "Weather conditions", control: "Monitor wind, rain, and ice, secure loose items" }
+            ],
+            electrical: [
+                { hazard: "Electrocution", control: "Lockout/Tagout procedures, insulated tools" },
+                { hazard: "Arc flash", control: "Proper PPE, maintain safe distances" },
+                { hazard: "Fire", control: "Fire extinguishers, proper wiring practices" },
+                { hazard: "Falls from height", control: "Fall protection systems when working at heights" },
+                { hazard: "Improper grounding", control: "Ensure proper grounding of equipment and circuits" },
+                { hazard: "Overloaded circuits", control: "Proper circuit design and protection" },
+                { hazard: "Exposed live parts", control: "Use proper guarding and insulation" },
+                { hazard: "Damaged insulation", control: "Regular inspection and replacement of damaged cords" },
+                { hazard: "Static electricity", control: "Proper grounding and bonding techniques" }
+            ],
+            roofing: [
+                { hazard: "Falls from roof edges", control: "Fall protection systems, guardrails" },
+                { hazard: "Slips on steep roofs", control: "Proper footwear, roof brackets" },
+                { hazard: "Falling objects", control: "Toe boards, debris nets, restricted access below" },
+                { hazard: "Burns from hot materials", control: "Proper PPE, safe handling procedures" },
+                { hazard: "Exposure to harmful substances", control: "Respiratory protection, ventilation" },
+                { hazard: "Ladder accidents", control: "Secure ladder placement, extend 3 feet above roof" },
+                { hazard: "Electrical hazards", control: "Identify and avoid overhead power lines" },
+                { hazard: "Collapse of roof structure", control: "Assess roof strength, use crawling boards" },
+                { hazard: "Heat stress", control: "Hydration, rest breaks, light-colored clothing" }
+            ],
+            concrete: [
+                { hazard: "Chemical burns from wet concrete", control: "Proper PPE, washing facilities" },
+                { hazard: "Silica dust exposure", control: "Dust control measures, respiratory protection" },
+                { hazard: "Musculoskeletal injuries", control: "Proper lifting techniques, mechanical aids" },
+                { hazard: "Struck-by injuries from equipment", control: "High-visibility clothing, designated walkways" },
+                { hazard: "Falls from formwork", control: "Fall protection systems, secure walking surfaces" },
+                { hazard: "Impalement on rebar", control: "Rebar caps, fall prevention" },
+                { hazard: "Electrical hazards from vibrators", control: "GFCI protection, inspect cords" },
+                { hazard: "Overexertion", control: "Task rotation, rest breaks" },
+                { hazard: "Concrete pumping accidents", control: "Trained operators, clear communication" }
+            ],
+            welding: [
+                { hazard: "Eye damage from arc flash", control: "Proper welding helmets with correct shade" },
+                { hazard: "Burns from sparks and spatter", control: "Fire-resistant clothing, gloves" },
+                { hazard: "Inhalation of toxic fumes", control: "Proper ventilation, respiratory protection" },
+                { hazard: "Fire hazards", control: "Fire watch, remove flammables, fire extinguishers" },
+                { hazard: "Electric shock", control: "Proper grounding, dry conditions" },
+                { hazard: "Compressed gas cylinder accidents", control: "Secure storage, proper handling" },
+                { hazard: "Noise exposure", control: "Hearing protection" },
+                { hazard: "Confined space hazards", control: "Proper ventilation, confined space procedures" },
+                { hazard: "UV radiation exposure", control: "Skin coverage, screens" }
+            ],
+            painting: [
+                { hazard: "Falls from heights", control: "Fall protection systems, stable work platforms" },
+                { hazard: "Exposure to toxic paint fumes", control: "Proper ventilation, respiratory protection" },
+                { hazard: "Skin contact with hazardous materials", control: "Protective clothing, gloves" },
+                { hazard: "Eye injuries from paint splatter", control: "Safety goggles or face shields" },
+                { hazard: "Ladder accidents", control: "Proper ladder placement and use" },
+                { hazard: "Slips and trips", control: "Good housekeeping, non-slip footwear" },
+                { hazard: "Electrical hazards", control: "GFCI protection for power tools" },
+                { hazard: "Ergonomic injuries", control: "Proper techniques, ergonomic tools" },
+                { hazard: "Fire hazards from flammable materials", control: "Proper storage, no smoking policy" }
+            ],
+            demolition: [
+                { hazard: "Structural collapse", control: "Engineering survey, sequence planning" },
+                { hazard: "Falls from height", control: "Fall protection systems, secure walking surfaces" },
+                { hazard: "Struck-by falling debris", control: "Controlled demolition techniques, restricted areas" },
+                { hazard: "Exposure to hazardous materials", control: "Pre-demolition survey, proper PPE" },
+                { hazard: "Dust inhalation", control: "Dust suppression methods, respiratory protection" },
+                { hazard: "Noise exposure", control: "Hearing protection, equipment maintenance" },
+                { hazard: "Electrical hazards", control: "Utility disconnection, lockout/tagout" },
+                { hazard: "Equipment accidents", control: "Trained operators, clear communication" },
+                { hazard: "Fire and explosion", control: "Remove flammables, fire watch" }
+            ],
+            crane: [
+                { hazard: "Crane tip-over", control: "Proper setup, load charts, outriggers" },
+                { hazard: "Struck-by loads", control: "Designated areas, taglines, trained signal person" },
+                { hazard: "Electrocution from power lines", control: "Maintain safe distances, use spotters" },
+                { hazard: "Falls during access/egress", control: "Proper access systems, fall protection" },
+                { hazard: "Mechanical failure", control: "Regular inspections, preventive maintenance" },
+                { hazard: "Crushing by counterweights", control: "Barricades, warning signs" },
+                { hazard: "Rigging failures", control: "Proper rigging techniques, inspections" },
+                { hazard: "Overloading", control: "Follow load charts, use load moment indicators" },
+                { hazard: "Wind hazards", control: "Monitor wind speeds, secure loads" }
+            ],
+            plumbing: [
+                { hazard: "Exposure to sewage and biological hazards", control: "PPE, hygiene practices" },
+                { hazard: "Burns from hot pipes and soldering", control: "Proper PPE, cool-down periods" },
+                { hazard: "Cuts from sharp tools and materials", control: "Cut-resistant gloves, proper tool use" },
+                { hazard: "Confined space entry", control: "Confined space procedures, air monitoring" },
+                { hazard: "Musculoskeletal injuries", control: "Proper lifting techniques, ergonomic tools" },
+                { hazard: "Slips and falls", control: "Non-slip footwear, good housekeeping" },
+                { hazard: "Exposure to asbestos in old pipes", control: "Asbestos awareness, proper removal" },
+                { hazard: "Eye injuries from debris", control: "Safety glasses or goggles" },
+                { hazard: "Electrical hazards", control: "GFCI protection, avoid wet conditions" }
+            ],
+            carpentry: [
+                { hazard: "Cuts from power tools", control: "Tool guards, proper training" },
+                { hazard: "Falls from heights", control: "Fall protection systems, secure scaffolding" },
+                { hazard: "Struck-by falling objects", control: "Hard hats, toe boards" },
+                { hazard: "Nail gun injuries", control: "Proper training, sequential trigger" },
+                { hazard: "Wood dust inhalation", control: "Dust collection systems, respiratory protection" },
+                { hazard: "Noise exposure", control: "Hearing protection" },
+                { hazard: "Musculoskeletal injuries", control: "Proper lifting techniques, ergonomic tools" },
+                { hazard: "Eye injuries from flying particles", control: "Safety glasses or goggles" },
+                { hazard: "Exposure to treated wood chemicals", control: "Gloves, proper hygiene" }
+            ],
+            hvac: [
+                { hazard: "Falls from heights", control: "Fall protection systems, proper ladder use" },
+                { hazard: "Electrical shock", control: "Lockout/Tagout procedures, insulated tools" },
+                { hazard: "Exposure to refrigerants", control: "Proper ventilation, leak detection" },
+                { hazard: "Burns from hot equipment", control: "Proper PPE, cool-down periods" },
+                { hazard: "Confined space entry", control: "Confined space procedures, air monitoring" },
+                { hazard: "Cuts from sheet metal", control: "Cut-resistant gloves, proper handling" },
+                { hazard: "Musculoskeletal injuries", control: "Proper lifting techniques, mechanical aids" },
+                { hazard: "Exposure to mold and biological hazards", control: "Respiratory protection, proper cleaning" },
+                { hazard: "Noise exposure", control: "Hearing protection" }
+            ]
         };
 
         const taskSelect = document.getElementById('taskSelect');
-        const hazardSelect = document.getElementById('hazardSelect');
-        const controlSelect = document.getElementById('controlSelect');
-        const addTaskButton = document.getElementById('addTask');
         const taskList = document.getElementById('taskList');
 
-        taskSelect.addEventListener('change', updateHazardsAndControls);
-        addTaskButton.addEventListener('click', addTaskToList);
+        taskSelect.addEventListener('change', updateTaskList);
 
-        function updateHazardsAndControls() {
+        function updateTaskList() {
             const selectedTask = taskSelect.value;
-            hazardSelect.innerHTML = '<option value="">Hazard</option>';
-            controlSelect.innerHTML = '<option value="">Control</option>';
+            taskList.innerHTML = '';
 
             if (selectedTask && taskData[selectedTask]) {
-                taskData[selectedTask].hazards.forEach(hazard => {
-                    const option = document.createElement('option');
-                    option.value = hazard;
-                    option.textContent = hazard;
-                    hazardSelect.appendChild(option);
+                taskData[selectedTask].forEach(item => {
+                    const taskItem = document.createElement('div');
+                    taskItem.classList.add('task-item');
+                    taskItem.innerHTML = `
+                        <strong>Hazard:</strong> ${item.hazard}<br>
+                        <strong>Control:</strong> ${item.control}
+                        <button class="delete-btn">X</button>
+                    `;
+                    taskList.appendChild(taskItem);
+
+                    const deleteBtn = taskItem.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', () => {
+                        taskList.removeChild(taskItem);
+                    });
                 });
-
-                taskData[selectedTask].controls.forEach(control => {
-                    const option = document.createElement('option');
-                    option.value = control;
-                    option.textContent = control;
-                    controlSelect.appendChild(option);
-                });
-
-                hazardSelect.disabled = false;
-                controlSelect.disabled = false;
-            } else {
-                hazardSelect.disabled = true;
-                controlSelect.disabled = true;
-            }
-        }
-
-        function addTaskToList() {
-            const task = taskSelect.options[taskSelect.selectedIndex].text;
-            const hazard = hazardSelect.value;
-            const control = controlSelect.value;
-
-            if (task && hazard && control) {
-                const taskItem = document.createElement('div');
-                taskItem.classList.add('task-item');
-                taskItem.innerHTML = `
-                    <strong>Task:</strong> ${task}<br>
-                    <strong>Hazard:</strong> ${hazard}<br>
-                    <strong>Control:</strong> ${control}
-                `;
-                taskList.appendChild(taskItem);
-
-                // Reset selections
-                taskSelect.value = '';
-                hazardSelect.innerHTML = '<option value="">Hazard</option>';
-                controlSelect.innerHTML = '<option value="">Control</option>';
-                hazardSelect.disabled = true;
-                controlSelect.disabled = true;
             }
         }
     </script>
