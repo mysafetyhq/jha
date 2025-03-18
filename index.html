@@ -282,81 +282,93 @@
         <button id="addCustomBtn">Add Custom Item</button>
     </div>
 
-    <button id="generateTextReport">Generate Text Report</button>
-    <button id="generatePDFReport">Generate PDF Report</button>
+    <button id="generateTextReport" class="report-btn">Generate Text Report</button>
+<button id="generatePDFReport" class="report-btn">Generate PDF Report</button>
 
-    <script>
-        const addCustomBtn = document.getElementById('addCustomBtn');
-        const customTaskInput = document.getElementById('customTask');
-        const customHazardInput = document.getElementById('customHazard');
-        const customControlInput = document.getElementById('customControl');
+<style>
+    .report-btn {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .report-btn:hover {
+        background-color: #45a049;
+    }
+</style>
 
-        addCustomBtn.addEventListener('click', () => {
-            const customTask = customTaskInput.value.trim();
-            const customHazard = customHazardInput.value.trim();
-            const customControl = customControlInput.value.trim();
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
-            if (customTask && customHazard && customControl) {
-                const taskItem = document.createElement('div');
-                taskItem.classList.add('task-item');
-                taskItem.innerHTML = `
-                    <strong>Task:</strong> ${customTask}<br>
-                    <strong>Hazard:</strong> ${customHazard}<br>
-                    <strong>Control:</strong> ${customControl}
-                    <button class="delete-btn">X</button>
-                `;
-                taskList.appendChild(taskItem);
+<script>
+    const { jsPDF } = window.jspdf;
 
-                const deleteBtn = taskItem.querySelector('.delete-btn');
-                deleteBtn.addEventListener('click', () => {
-                    taskList.removeChild(taskItem);
-                });
+    // ... (Your existing code for addCustomBtn event listener)
 
-                // Clear input fields
-                customTaskInput.value = '';
-                customHazardInput.value = '';
-                customControlInput.value = '';
-            } else {
-                alert("Please fill in all fields.");
+    document.getElementById('generateTextReport').addEventListener('click', () => {
+        let reportContent = "Task, Hazard, Control\n";
+        const items = taskList.children;
+
+        for (let item of items) {
+            const task = item.querySelector('strong').nextSibling.textContent.trim();
+            const hazard = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent.trim();
+            const control = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent.trim();
+            reportContent += `${task}, ${hazard}, ${control}\n`;
+        }
+
+        const blob = new Blob([reportContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "task_hazard_analysis.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
+    document.getElementById('generatePDFReport').addEventListener('click', () => {
+        const doc = new jsPDF();
+        const items = taskList.children;
+        const tableData = [];
+
+        for (let item of items) {
+            const task = item.querySelector('strong').nextSibling.textContent.trim();
+            const hazard = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent.trim();
+            const control = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent.trim();
+            tableData.push([task, hazard, control]);
+        }
+
+        doc.setFontSize(18);
+        doc.text("Task Hazard Analysis Report", 14, 22);
+        
+        doc.autoTable({
+            head: [['Task', 'Hazard', 'Control']],
+            body: tableData,
+            startY: 30,
+            styles: {
+                fontSize: 12,
+                cellPadding: 5,
+                overflow: 'linebreak',
+                halign: 'left'
+            },
+            headStyles: {
+                fillColor: [76, 175, 80],
+                textColor: 255,
+                fontStyle: 'bold'
+            },
+            alternateRowStyles: {
+                fillColor: [240, 240, 240]
             }
         });
 
-        document.getElementById('generateTextReport').addEventListener('click', () => {
-            let reportContent = "Task, Hazard, Control\n";
-            const items = taskList.children;
-
-            for (let item of items) {
-                const task = item.querySelector('strong').nextSibling.textContent;
-                const hazard = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent;
-                const control = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent;
-                reportContent += `${task}, ${hazard}, ${control}\n`;
-            }
-
-            const blob = new Blob([reportContent], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-        });
-
-        document.getElementById('generatePDFReport').addEventListener('click', () => {
-            let pdfContent = "<h1>Task Hazard Analysis Report</h1><table><tr><th>Task</th><th>Hazard</th><th>Control</th></tr>";
-            const items = taskList.children;
-
-            for (let item of items) {
-                const task = item.querySelector('strong').nextSibling.textContent;
-                const hazard = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent;
-                const control = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent;
-                pdfContent += `<tr><td>${task}</td><td>${hazard}</td><td>${control}</td></tr>`;
-            }
-            pdfContent += "</table>";
-
-            const pdfWindow = window.open('', '_blank');
-            pdfWindow.document.write(pdfContent);
-            pdfWindow.document.close();
-            pdfWindow.focus();
-            pdfWindow.print();
-        });
-    </script>
-
-
-               
-
+        doc.save("task_hazard_analysis.pdf");
+    });
+</script>
