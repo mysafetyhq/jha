@@ -235,7 +235,7 @@
                 taskData[selectedTask].forEach((item, index) => {
                     const option = document.createElement('option');
                     option.value = index;
-                    option.textContent = item.hazard;
+                    option.textContent = `${item.hazard} - ${item.control}`; // Show both hazard and control
                     hazardSelect.appendChild(option);
                 });
             }
@@ -264,8 +264,15 @@
 
                 // Reset hazard selection
                 hazardSelect.value = "";
+                hazardSelect.disabled = true; // Disable hazard selection after adding
+                taskSelect.value = ""; // Reset task selection
+            } else {
+                alert("Please select both a task and a hazard.");
             }
         }
     </script>
 </body>
 </html>
+
+               
+
